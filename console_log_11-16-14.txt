@@ -1,0 +1,121 @@
+> dir()
+[1] "cachematrix.R" "README.md"    
+> rm (list=ls())
+> ? '<<-'
+> makeVector <- function(x = numeric()) {
++             m <- NULL
++             set <- function(y) {
++                     x <<- y
++                     m <<- NULL
++             }
++             get <- function() x
++             setmean <- function(mean) m <<- mean
++             getmean <- function() m
++             list(set = set, get = get,
++                  setmean = setmean,
++                  getmean = getmean)
++     }
+> z_in <- 1:10
+> z
+Error: object 'z' not found
+> z_in
+ [1]  1  2  3  4  5  6  7  8  9 10
+> z <- makeVector$set(z_in)
+Error in makeVector$set : object of type 'closure' is not subsettable
+> z <- makeVector
+> z
+function(x = numeric()) {
+            m <- NULL
+            set <- function(y) {
+                    x <<- y
+                    m <<- NULL
+            }
+            get <- function() x
+            setmean <- function(mean) m <<- mean
+            getmean <- function() m
+            list(set = set, get = get,
+                 setmean = setmean,
+                 getmean = getmean)
+    }
+> z$set <- z_in
+Error in z$set <- z_in : object of type 'closure' is not subsettable
+> z$set
+Error in z$set : object of type 'closure' is not subsettable
+> z <- makeVector(z_in)
+> z
+$set
+function (y) 
+{
+    x <<- y
+    m <<- NULL
+}
+<environment: 0x10815e000>
+
+$get
+function () 
+x
+<environment: 0x10815e000>
+
+$setmean
+function (mean) 
+m <<- mean
+<environment: 0x10815e000>
+
+$getmean
+function () 
+m
+<environment: 0x10815e000>
+
+> z$setmean()
+Error in z$setmean() : argument "mean" is missing, with no default
+> z$setmean(mean(z_in))
+> a <- z$getmean()
+> a
+[1] 5.5
+> z_in2 <- 10:20
+> z$set(z_in2)
+> z
+$set
+function (y) 
+{
+    x <<- y
+    m <<- NULL
+}
+<environment: 0x10815e000>
+
+$get
+function () 
+x
+<environment: 0x10815e000>
+
+$setmean
+function (mean) 
+m <<- mean
+<environment: 0x10815e000>
+
+$getmean
+function () 
+m
+<environment: 0x10815e000>
+
+> z$getmean()
+NULL
+> x
+Error: object 'x' not found
+> z$set
+function(y) {
+                    x <<- y
+                    m <<- NULL
+            }
+<environment: 0x10815e000>
+> z$get
+function() x
+<environment: 0x10815e000>
+> z$get()
+ [1] 10 11 12 13 14 15 16 17 18 19 20
+> z$setmean(mean(z$get))
+Warning message:
+In mean.default(z$get) : argument is not numeric or logical: returning NA
+> z$setmean(mean(z$get()))
+> z$getmean()
+[1] 15
